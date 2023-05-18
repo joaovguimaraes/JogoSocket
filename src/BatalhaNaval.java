@@ -1,5 +1,4 @@
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
 
 public class BatalhaNaval {
 
@@ -15,51 +14,29 @@ public class BatalhaNaval {
 
     static String nomeJogador1 = "A";
     static String nomeJogador2 = "B";
-    static int quantidadeDeNavios = 3 ;
-
+    static int quantidadeDeNavios = 3;
+    static Boolean hit;
     static int naviosJogador1 = quantidadeDeNavios;
     static int naviosJogador2 = quantidadeDeNavios;
 
-//    public static void main(String[] args) {
-//        inserirOsNaviosNosTabuleirosDosJogadores();
- //       boolean jogoAtivo = true;
-   //     do{
-     //       exibirTabuleirosDosJogadores();
-       //     if (acaoDoJogador(1)) {
-         //       if (naviosJogador2 <= 0) {
-           //         System.out.println(nomeJogador1 + " venceu o jogo!");
-               //     break;
-             //   }
-                // Verifico fim do jogo
-       //         acaoDoJogador(2);
-                //if (naviosJogador1 <= 0) {
-                 //   System.out.println(nomeJogador2 + " venceu o jogo!");
-             //       break;
-                //}
-           // }
-
-        //}while (jogoAtivo);
-        //exibirTabuleirosDosJogadores();
-        //input.close();
-   // }
 
     public static int[][] retornarNovoTabuleiroComOsNavios() {
         int[][] novoTabuleiro = new int[5][5];
         int quantidadeRestanteDeNavios = quantidadeDeNavios;
-        int x= 0, y= 0;
+        int x = 0, y = 0;
         Random numeroAleatorio = new Random();
         do {
             x = 0;
             y = 0;
-            for(int[] linha : novoTabuleiro) {
+            for (int[] linha : novoTabuleiro) {
                 for (int coluna : linha) {
                     if (numeroAleatorio.nextInt(100) <= 10) {
-                        if(coluna == VAZIO) {
+                        if (coluna == VAZIO) {
                             novoTabuleiro[x][y] = NAVIO;
                             quantidadeRestanteDeNavios--;
                             break;
                         }
-                        if(quantidadeRestanteDeNavios < 0) {
+                        if (quantidadeRestanteDeNavios < 0) {
                             break;
                         }
                     }
@@ -67,7 +44,7 @@ public class BatalhaNaval {
                 }
                 y = 0;
                 x++;
-                if(quantidadeRestanteDeNavios <= 0) {
+                if (quantidadeRestanteDeNavios <= 0) {
                     break;
                 }
             }
@@ -75,16 +52,11 @@ public class BatalhaNaval {
         return novoTabuleiro;
     }
 
-    public static void inserirOsNaviosNosTabuleirosDosJogadores() {
-        Main.tabuleiroJogador1 = retornarNovoTabuleiroComOsNavios();
-        Main.tabuleiroJogador2 = retornarNovoTabuleiroComOsNavios();
-    }
-
     public static boolean validarPosicoesInseridasPeloJogador(int[] posicoes) {
         boolean retorno = true;
-        if (posicoes[0] > tamanhoX -1) {
+        if (posicoes[0] > tamanhoX - 1) {
             retorno = false;
-            System.out.println("A posicao das letras não pode ser maior que " + (char)(tamanhoX + 64));
+            System.out.println("A posicao das letras não pode ser maior que " + (char) (tamanhoX + 64));
         }
         if (posicoes[1] > tamanhoY) {
             retorno = false;
@@ -109,26 +81,56 @@ public class BatalhaNaval {
         return retorno;
     }
 
-    public static void inserirValoresDaAcaoNoTabuleiro(int[] posicoes, int numeroDoJogador) {
-        if (numeroDoJogador == 1) {
-            if (Main.tabuleiroJogador2[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == NAVIO) {
-                Main.tabuleiroJogador2[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ACERTOU_TIRO;
-                naviosJogador2--;
-                System.out.println("Você acertou um navio!");
-            } else {
-                Main.tabuleiroJogador2[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ERROU_TIRO;
-                System.out.println("Você errou o tiro!");
-            }
-        } else {
-            if (Main.tabuleiroJogador1[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == NAVIO) {
-                Main.tabuleiroJogador1[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ACERTOU_TIRO;
+    public static int[][] inserirValoresDaAcaoNoTabuleiro(int[] posicoes, int playerId, int[][] board) {
+        if (board[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == NAVIO) {
+            board[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ACERTOU_TIRO;
+            hit = true;
+            if(playerId == 1)
                 naviosJogador1--;
-                System.out.println("Você acertou um navio!");
-            } else {
-                Main.tabuleiroJogador1[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ERROU_TIRO;
-                System.out.println("Você errou o tiro!");
+            else
+                naviosJogador2--;
+            System.out.println("Você acertou um navio!");
+        } else {
+            board[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ERROU_TIRO;
+            System.out.println("Você errou o tiro!");
+            hit = false;
+        }
+        return board;
+    }
+
+    public static int[][] parseStringToArray(String str) {
+        str = str.replaceAll("\\[\\[", "").replaceAll("]]", ""); // Remove os colchetes externos
+
+        String[] rowStrings = str.split("], \\["); // Divide a string em linhas
+        int rowCount = rowStrings.length;
+
+        List<List<Integer>> rows = new ArrayList<>();
+
+        for (String rowString : rowStrings) {
+            String[] valueStrings = rowString.split(", "); // Divide a linha em valores
+            List<Integer> values = new ArrayList<>();
+
+            for (String valueString : valueStrings) {
+                int value = Integer.parseInt(valueString.trim()); // Converte o valor em inteiro
+                values.add(value);
+            }
+
+            rows.add(values);
+        }
+
+        int[][] array = new int[rowCount][];
+
+        for (int i = 0; i < rowCount; i++) {
+            List<Integer> row = rows.get(i);
+            int colCount = row.size();
+            array[i] = new int[colCount];
+
+            for (int j = 0; j < colCount; j++) {
+                array[i][j] = row.get(j); // Atribui o valor ao array
             }
         }
+
+        return array;
     }
 
     public static void setNomeJogador1(String nomeJogador1) {
@@ -138,7 +140,6 @@ public class BatalhaNaval {
     public static void setNomeJogador2(String nomeJogador2) {
         BatalhaNaval.nomeJogador2 = nomeJogador2;
     }
-
 
 
     public static void setTabuleiroJogador2(int[][] tabuleiroJogador2) {

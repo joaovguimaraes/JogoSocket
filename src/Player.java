@@ -14,7 +14,6 @@ public class Player {
     private ObjectInputStream in;
     private int playerId;
     private String name;
-    private int[][] currentBoard;
     public Player() {
         this.scanner = new Scanner(System.in);
         this.name = askName();
@@ -43,19 +42,40 @@ public class Player {
     }
 
     private void run() {
+        int navios = playerId == 0 ? BatalhaNaval.naviosJogador1 : BatalhaNaval.naviosJogador2;
         try {
             int id = (int) this.in.readObject();
             System.out.println("PlayerId:" + id);
             setPlayerId(id);
             this.out.writeObject(name);
-            while (true) {
-                MessagePackage data = attackIn();
-                setCurrentBoard(data.getBoard()); // Atualiza o tabuleiro atualizado
-                showBoard(currentBoard); // Exibe o tabuleiro atualizado
-                if (data.getCurrentPlayerTurn() == playerId) {
+
+            while (navios > 0) {
+                MessagePackage messagePackage = attackIn();
+                if(messagePackage.getPlayerLife() == 0) {
+                    System.out.println("Perdeu");
+                    break;
+                }
+                showBoard(messagePackage.getBoard()); // Exibe o tabuleiro atualizado
+                if (messagePackage.getCurrentPlayerTurn() == playerId) {
+                    if(messagePackage.isHit() != null ){
+                        if (messagePackage.isHit()) {
+                            System.out.println("Te acertaram cuidado!");
+                        } else {
+                            System.out.println("Ele errou ufa!");
+                        }
+                    }
                     send(askAction());
+                }else{
+                    if(messagePackage.isHit() != null ){
+                        if (messagePackage.isHit()) {
+                            System.out.println("Acertou ele!");
+                        } else {
+                            System.out.println("Errouu!");
+                        }
+                    }
                 }
             }
+            this.socket.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,7 +83,6 @@ public class Player {
 
     private MessagePackage attackIn() throws IOException, ClassNotFoundException {
         MessagePackage obj = (MessagePackage) this.in.readObject();
-        System.out.println("AttackIn: " + obj);
         return obj;
     }
 
@@ -122,10 +141,18 @@ public class Player {
             linhaDoTabuleiro = new StringBuilder((letraDaLinha++) + " |");
             for (int coluna : linha) {
                 switch (coluna) {
-                    case BatalhaNaval.VAZIO -> linhaDoTabuleiro.append(" |");
-                    case BatalhaNaval.NAVIO -> linhaDoTabuleiro.append("N|");
-                    case BatalhaNaval.ERROU_TIRO -> linhaDoTabuleiro.append("X|");
-                    case BatalhaNaval.ACERTOU_TIRO -> linhaDoTabuleiro.append("D|");
+                    case BatalhaNaval.VAZIO: {
+                        linhaDoTabuleiro.append(" |");
+                    }
+                    case BatalhaNaval.NAVIO : {
+                        linhaDoTabuleiro.append("N|");
+                    }
+                    case BatalhaNaval.ERROU_TIRO: {
+                        linhaDoTabuleiro.append("X|");
+                    }
+                    case BatalhaNaval.ACERTOU_TIRO : {
+                        linhaDoTabuleiro.append("D|");
+                    }
                 }
             }
             System.out.println(linhaDoTabuleiro);
@@ -134,9 +161,6 @@ public class Player {
 
     public int getPlayerId() {
         return playerId;
-    }
-    public void setCurrentBoard(int[][] board) {
-        this.currentBoard = board;
     }
     public void setPlayerId(int playerId) {
         this.playerId = playerId;

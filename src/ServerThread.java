@@ -2,7 +2,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ServerThread implements Runnable {
     private final String EXIT_MSG = "exit";
@@ -10,7 +12,6 @@ public class ServerThread implements Runnable {
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private int playerId;
-
     private String playerName;
 
     public ServerThread(Socket socket, Main server, int playerId) throws IOException {
@@ -42,6 +43,7 @@ public class ServerThread implements Runnable {
     }
 
     public void play(MessagePackage outMessage) throws IOException {
+        System.out.println("Board do " + getPlayerName() + ":");
         System.out.println(Arrays.deepToString(outMessage.getBoard()));
         this.out.writeObject(outMessage);
     } // fim do método send(MessagePacket)
@@ -53,4 +55,6 @@ public class ServerThread implements Runnable {
     public void setPlayerName(String playerName) {
         this.playerName = playerName;
     }
+
+
 } // fim da classe ServerThread

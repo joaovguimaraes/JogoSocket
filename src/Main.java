@@ -9,8 +9,8 @@ import java.util.List;
 public class Main {
     private final int PORT = 5000;
     private List<ServerThread> threads;
-    static int[][] tabuleiroJogador1;
-    static int[][] tabuleiroJogador2;
+    private int[][] tabuleiroJogador1;
+    private int[][] tabuleiroJogador2;
     static int currentPlayerTurn = 0;
     private boolean matchEnded = false;
 
@@ -44,16 +44,35 @@ public class Main {
     public void startGame() throws IOException {
         BatalhaNaval.setNomeJogador1(threads.get(0).getPlayerName());
         BatalhaNaval.setNomeJogador2(threads.get(1).getPlayerName());
-        BatalhaNaval.inserirOsNaviosNosTabuleirosDosJogadores();
+        this.startBoard();
 
-        while (BatalhaNaval.naviosJogador1 > 0 || BatalhaNaval.naviosJogador2 > 0) {
+        while (BatalhaNaval.naviosJogador1 != 0 || BatalhaNaval.naviosJogador2 != 0) {
             System.out.println("Turno do " + threads.get(currentPlayerTurn).getPlayerName());
-            threads.get(0).play(new MessagePackage(messageString(0), currentPlayerTurn, tabuleiroJogador1));
-            threads.get(1).play(new MessagePackage(messageString(1), currentPlayerTurn, tabuleiroJogador2));
+
+            MessagePackage mp1 = new MessagePackage();
+            mp1.setBoard(BatalhaNaval.parseStringToArray(Arrays.deepToString(tabuleiroJogador1)));
+            //mp1.setBoard(tabuleiroJogador1);
+            mp1.setMessage(Arrays.deepToString(tabuleiroJogador1));
+            mp1.setCurrentPlayerTurn(currentPlayerTurn);
+            if (BatalhaNaval.hit != null) mp1.setHit(BatalhaNaval.hit);
+            mp1.setPlayerLife(Integer.parseInt(Integer.toString(BatalhaNaval.naviosJogador1)));
+            threads.get(0).play(mp1);
+            MessagePackage mp2 = new MessagePackage();
+            mp2.setBoard(BatalhaNaval.parseStringToArray(Arrays.deepToString(tabuleiroJogador2)));
+            //mp2.setBoard(tabuleiroJogador2);
+            mp2.setMessage(Arrays.deepToString(tabuleiroJogador2));
+            mp2.setCurrentPlayerTurn(currentPlayerTurn);
+            if (BatalhaNaval.hit != null) mp2.setHit(BatalhaNaval.hit);
+            mp2.setPlayerLife(Integer.parseInt(Integer.toString(BatalhaNaval.naviosJogador2)));
+            if (BatalhaNaval.naviosJogador1 != 0 || BatalhaNaval.naviosJogador2 != 0) {
+                break;
+            }
             String playerAction = threads.get(currentPlayerTurn).getAction();
-            pLayerAction(playerAction, currentPlayerTurn);
+            playerAction(playerAction, currentPlayerTurn);
             setCurrentPlayerTurn(currentPlayerTurn == 0 ? 1 : 0);
+            System.out.println("Fim do turno");
         }
+        matchEnded = true;
         System.out.println("Acabou");
     }
 
@@ -70,10 +89,10 @@ public class Main {
         }
     }
 
-    public void pLayerAction(String playerAttack, int playerId) {
+    public void playerAction(String playerAttack, int playerId) {
         int[] positions = BatalhaNaval.retornarPosicoesDigitadasPeloJogador(playerAttack);
         if (BatalhaNaval.validarPosicoesInseridasPeloJogador(positions)) {
-            BatalhaNaval.inserirValoresDaAcaoNoTabuleiro(positions, playerId);
+            setAnotherBoard(BatalhaNaval.inserirValoresDaAcaoNoTabuleiro(positions, playerId, getAnotherBoard()));
         }
     }
 
@@ -81,15 +100,23 @@ public class Main {
         return currentPlayerTurn;
     }
 
+    public int [] [] getAnotherBoard() {
+        return currentPlayerTurn == 0 ? this.tabuleiroJogador2 : this.tabuleiroJogador1;
+    }
+
+    public void setAnotherBoard(int [] []board) {
+        if( currentPlayerTurn == 0 )
+            this.tabuleiroJogador2 = board;
+        else
+            this.tabuleiroJogador1 = board;
+    }
+
     public void setCurrentPlayerTurn(int currentPlayerTurn) {
         this.currentPlayerTurn = currentPlayerTurn;
     }
 
-    public static int[][] getTabuleiroJogador1() {
-        return tabuleiroJogador1;
-    }
-
-    public static int[][] getTabuleiroJogador2() {
-        return tabuleiroJogador2;
+    public void startBoard() {
+        this.tabuleiroJogador1 = BatalhaNaval.retornarNovoTabuleiroComOsNavios();
+        this.tabuleiroJogador2 = BatalhaNaval.retornarNovoTabuleiroComOsNavios();
     }
 }

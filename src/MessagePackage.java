@@ -2,20 +2,23 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 public class MessagePackage implements Serializable {
-    private final String message;
+    private String message;
     private int currentPlayerTurn;
 
     private int[][] board;
 
-    public MessagePackage(String message, int currentPlayerTurn) {
-        this.message = message;
-        this.currentPlayerTurn = currentPlayerTurn;
+    private Boolean hit;
+
+    private int playerLife;
+    public MessagePackage() {
     }
 
-    public MessagePackage(String message, int currentPlayerTurn, int[][] board) {
+    public MessagePackage(String message, int currentPlayerTurn, int[][] board, boolean hit, int playerLife) {
         this.message = message;
         this.currentPlayerTurn = currentPlayerTurn;
         this.board = board;
+        this.hit = hit;
+        this.playerLife = playerLife;
     }
 
     public String getMessage() {
@@ -34,10 +37,29 @@ public class MessagePackage implements Serializable {
         return board;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public void setBoard(int[][] board) {
         this.board = board;
     }
 
+    public Boolean isHit() {
+        return hit;
+    }
+
+    public void setHit(boolean hit) {
+        this.hit = hit;
+    }
+
+    public int getPlayerLife() {
+        return playerLife;
+    }
+
+    public void setPlayerLife(int playerLife) {
+        this.playerLife = playerLife;
+    }
     @Override
     public String toString() {
         return "MessagePackage{" +
