@@ -9,16 +9,16 @@ public class MessagePackage implements Serializable {
 
     private Boolean hit;
 
-    private boolean matchEnded = false;
+    private int playerLife;
     public MessagePackage() {
     }
 
-    public MessagePackage(String message, int currentPlayerTurn, int[][] board, boolean hit, boolean matchEnded) {
+    public MessagePackage(String message, int currentPlayerTurn, int[][] board, boolean hit, int playerLife) {
         this.message = message;
         this.currentPlayerTurn = currentPlayerTurn;
         this.board = board;
         this.hit = hit;
-        this.matchEnded = matchEnded;
+        this.playerLife = playerLife;
     }
 
     public String getMessage() {
@@ -53,12 +53,12 @@ public class MessagePackage implements Serializable {
         this.hit = hit;
     }
 
-    public boolean hasMatchEnded() {
-        return matchEnded;
+    public int getPlayerLife() {
+        return playerLife;
     }
 
-    public void setMatchEnded(boolean matchEnded) {
-        matchEnded = matchEnded;
+    public void setPlayerLife(int playerLife) {
+        this.playerLife = playerLife;
     }
     @Override
     public String toString() {

@@ -12,7 +12,6 @@ public class ServerThread implements Runnable {
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private int playerId;
-
     private String playerName;
 
     public ServerThread(Socket socket, Main server, int playerId) throws IOException {

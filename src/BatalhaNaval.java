@@ -85,7 +85,7 @@ public class BatalhaNaval {
         if (board[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == NAVIO) {
             board[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ACERTOU_TIRO;
             hit = true;
-            if(playerId == 0)
+            if(playerId == 1)
                 naviosJogador1--;
             else
                 naviosJogador2--;

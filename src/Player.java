@@ -51,7 +51,10 @@ public class Player {
 
             while (navios > 0) {
                 MessagePackage messagePackage = attackIn();
-                if(messagePackage.hasMatchEnded()) break;
+                if(messagePackage.getPlayerLife() == 0) {
+                    System.out.println("Perdeu");
+                    break;
+                }
                 showBoard(messagePackage.getBoard()); // Exibe o tabuleiro atualizado
                 if (messagePackage.getCurrentPlayerTurn() == playerId) {
                     if(messagePackage.isHit() != null ){

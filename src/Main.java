@@ -46,7 +46,7 @@ public class Main {
         BatalhaNaval.setNomeJogador2(threads.get(1).getPlayerName());
         this.startBoard();
 
-        while (true) {
+        while (BatalhaNaval.naviosJogador1 != 0 || BatalhaNaval.naviosJogador2 != 0) {
             System.out.println("Turno do " + threads.get(currentPlayerTurn).getPlayerName());
 
             MessagePackage mp1 = new MessagePackage();
@@ -55,18 +55,16 @@ public class Main {
             mp1.setMessage(Arrays.deepToString(tabuleiroJogador1));
             mp1.setCurrentPlayerTurn(currentPlayerTurn);
             if (BatalhaNaval.hit != null) mp1.setHit(BatalhaNaval.hit);
+            mp1.setPlayerLife(Integer.parseInt(Integer.toString(BatalhaNaval.naviosJogador1)));
             threads.get(0).play(mp1);
-            if(BatalhaNaval.naviosJogador2 <= 0){
-                break;
-            }
             MessagePackage mp2 = new MessagePackage();
             mp2.setBoard(BatalhaNaval.parseStringToArray(Arrays.deepToString(tabuleiroJogador2)));
             //mp2.setBoard(tabuleiroJogador2);
             mp2.setMessage(Arrays.deepToString(tabuleiroJogador2));
             mp2.setCurrentPlayerTurn(currentPlayerTurn);
             if (BatalhaNaval.hit != null) mp2.setHit(BatalhaNaval.hit);
-            threads.get(1).play(mp2);
-            if(BatalhaNaval.naviosJogador1 <= 0){
+            mp2.setPlayerLife(Integer.parseInt(Integer.toString(BatalhaNaval.naviosJogador2)));
+            if (BatalhaNaval.naviosJogador1 != 0 || BatalhaNaval.naviosJogador2 != 0) {
                 break;
             }
             String playerAction = threads.get(currentPlayerTurn).getAction();
@@ -75,7 +73,6 @@ public class Main {
             System.out.println("Fim do turno");
         }
         matchEnded = true;
-
         System.out.println("Acabou");
     }
 
