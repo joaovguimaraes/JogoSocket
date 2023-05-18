@@ -15,32 +15,10 @@ public class BatalhaNaval {
     static String nomeJogador1 = "A";
     static String nomeJogador2 = "B";
     static int quantidadeDeNavios = 3;
-
+    static Boolean hit;
     static int naviosJogador1 = quantidadeDeNavios;
     static int naviosJogador2 = quantidadeDeNavios;
 
-//    public static void main(String[] args) {
-//        inserirOsNaviosNosTabuleirosDosJogadores();
-    //       boolean jogoAtivo = true;
-    //     do{
-    //       exibirTabuleirosDosJogadores();
-    //     if (acaoDoJogador(1)) {
-    //       if (naviosJogador2 <= 0) {
-    //         System.out.println(nomeJogador1 + " venceu o jogo!");
-    //     break;
-    //   }
-    // Verifico fim do jogo
-    //         acaoDoJogador(2);
-    //if (naviosJogador1 <= 0) {
-    //   System.out.println(nomeJogador2 + " venceu o jogo!");
-    //       break;
-    //}
-    // }
-
-    //}while (jogoAtivo);
-    //exibirTabuleirosDosJogadores();
-    //input.close();
-    // }
 
     public static int[][] retornarNovoTabuleiroComOsNavios() {
         int[][] novoTabuleiro = new int[5][5];
@@ -106,6 +84,7 @@ public class BatalhaNaval {
     public static int[][] inserirValoresDaAcaoNoTabuleiro(int[] posicoes, int playerId, int[][] board) {
         if (board[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == NAVIO) {
             board[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ACERTOU_TIRO;
+            hit = true;
             if(playerId == 0)
                 naviosJogador1--;
             else
@@ -114,6 +93,7 @@ public class BatalhaNaval {
         } else {
             board[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ERROU_TIRO;
             System.out.println("Você errou o tiro!");
+            hit = false;
         }
         return board;
     }

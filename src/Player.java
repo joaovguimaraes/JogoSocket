@@ -42,18 +42,37 @@ public class Player {
     }
 
     private void run() {
+        int navios = playerId == 0 ? BatalhaNaval.naviosJogador1 : BatalhaNaval.naviosJogador2;
         try {
             int id = (int) this.in.readObject();
             System.out.println("PlayerId:" + id);
             setPlayerId(id);
             this.out.writeObject(name);
-            while (true) {
+
+            while (navios > 0) {
                 MessagePackage messagePackage = attackIn();
+                if(messagePackage.hasMatchEnded()) break;
                 showBoard(messagePackage.getBoard()); // Exibe o tabuleiro atualizado
                 if (messagePackage.getCurrentPlayerTurn() == playerId) {
+                    if(messagePackage.isHit() != null ){
+                        if (messagePackage.isHit()) {
+                            System.out.println("Te acertaram cuidado!");
+                        } else {
+                            System.out.println("Ele errou ufa!");
+                        }
+                    }
                     send(askAction());
+                }else{
+                    if(messagePackage.isHit() != null ){
+                        if (messagePackage.isHit()) {
+                            System.out.println("Acertou ele!");
+                        } else {
+                            System.out.println("Errouu!");
+                        }
+                    }
                 }
             }
+            this.socket.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -61,7 +80,6 @@ public class Player {
 
     private MessagePackage attackIn() throws IOException, ClassNotFoundException {
         MessagePackage obj = (MessagePackage) this.in.readObject();
-        System.out.println("AttackIn: " + obj);
         return obj;
     }
 

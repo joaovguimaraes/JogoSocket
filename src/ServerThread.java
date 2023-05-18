@@ -44,6 +44,7 @@ public class ServerThread implements Runnable {
     }
 
     public void play(MessagePackage outMessage) throws IOException {
+        System.out.println("Board do " + getPlayerName() + ":");
         System.out.println(Arrays.deepToString(outMessage.getBoard()));
         this.out.writeObject(outMessage);
     } // fim do método send(MessagePacket)

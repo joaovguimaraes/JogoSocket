@@ -7,14 +7,18 @@ public class MessagePackage implements Serializable {
 
     private int[][] board;
 
+    private Boolean hit;
+
+    private boolean matchEnded = false;
     public MessagePackage() {
     }
 
-
-    public MessagePackage(String message, int currentPlayerTurn, int[][] board) {
+    public MessagePackage(String message, int currentPlayerTurn, int[][] board, boolean hit, boolean matchEnded) {
         this.message = message;
         this.currentPlayerTurn = currentPlayerTurn;
         this.board = board;
+        this.hit = hit;
+        this.matchEnded = matchEnded;
     }
 
     public String getMessage() {
@@ -41,6 +45,21 @@ public class MessagePackage implements Serializable {
         this.board = board;
     }
 
+    public Boolean isHit() {
+        return hit;
+    }
+
+    public void setHit(boolean hit) {
+        this.hit = hit;
+    }
+
+    public boolean hasMatchEnded() {
+        return matchEnded;
+    }
+
+    public void setMatchEnded(boolean matchEnded) {
+        matchEnded = matchEnded;
+    }
     @Override
     public String toString() {
         return "MessagePackage{" +
