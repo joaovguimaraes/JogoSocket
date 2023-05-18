@@ -141,10 +141,18 @@ public class Player {
             linhaDoTabuleiro = new StringBuilder((letraDaLinha++) + " |");
             for (int coluna : linha) {
                 switch (coluna) {
-                    case BatalhaNaval.VAZIO -> linhaDoTabuleiro.append(" |");
-                    case BatalhaNaval.NAVIO -> linhaDoTabuleiro.append("N|");
-                    case BatalhaNaval.ERROU_TIRO -> linhaDoTabuleiro.append("X|");
-                    case BatalhaNaval.ACERTOU_TIRO -> linhaDoTabuleiro.append("D|");
+                    case BatalhaNaval.VAZIO: {
+                        linhaDoTabuleiro.append(" |");
+                    }
+                    case BatalhaNaval.NAVIO : {
+                        linhaDoTabuleiro.append("N|");
+                    }
+                    case BatalhaNaval.ERROU_TIRO: {
+                        linhaDoTabuleiro.append("X|");
+                    }
+                    case BatalhaNaval.ACERTOU_TIRO : {
+                        linhaDoTabuleiro.append("D|");
+                    }
                 }
             }
             System.out.println(linhaDoTabuleiro);
