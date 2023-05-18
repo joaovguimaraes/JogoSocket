@@ -2,15 +2,14 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 public class MessagePackage implements Serializable {
-    private final String message;
+    private String message;
     private int currentPlayerTurn;
 
     private int[][] board;
 
-    public MessagePackage(String message, int currentPlayerTurn) {
-        this.message = message;
-        this.currentPlayerTurn = currentPlayerTurn;
+    public MessagePackage() {
     }
+
 
     public MessagePackage(String message, int currentPlayerTurn, int[][] board) {
         this.message = message;
@@ -32,6 +31,10 @@ public class MessagePackage implements Serializable {
 
     public int[][] getBoard() {
         return board;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public void setBoard(int[][] board) {

@@ -14,7 +14,6 @@ public class Player {
     private ObjectInputStream in;
     private int playerId;
     private String name;
-    private int[][] currentBoard;
     public Player() {
         this.scanner = new Scanner(System.in);
         this.name = askName();
@@ -49,10 +48,9 @@ public class Player {
             setPlayerId(id);
             this.out.writeObject(name);
             while (true) {
-                MessagePackage data = attackIn();
-                setCurrentBoard(data.getBoard()); // Atualiza o tabuleiro atualizado
-                showBoard(currentBoard); // Exibe o tabuleiro atualizado
-                if (data.getCurrentPlayerTurn() == playerId) {
+                MessagePackage messagePackage = attackIn();
+                showBoard(messagePackage.getBoard()); // Exibe o tabuleiro atualizado
+                if (messagePackage.getCurrentPlayerTurn() == playerId) {
                     send(askAction());
                 }
             }
@@ -134,9 +132,6 @@ public class Player {
 
     public int getPlayerId() {
         return playerId;
-    }
-    public void setCurrentBoard(int[][] board) {
-        this.currentBoard = board;
     }
     public void setPlayerId(int playerId) {
         this.playerId = playerId;
