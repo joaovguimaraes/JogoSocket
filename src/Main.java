@@ -64,11 +64,11 @@ public class Main {
             mp2.setCurrentPlayerTurn(currentPlayerTurn);
             if (BatalhaNaval.hit != null) mp2.setHit(BatalhaNaval.hit);
             mp2.setPlayerLife(Integer.parseInt(Integer.toString(BatalhaNaval.naviosJogador2)));
-            if (BatalhaNaval.naviosJogador1 != 0 || BatalhaNaval.naviosJogador2 != 0) {
-                break;
-            }
             String playerAction = threads.get(currentPlayerTurn).getAction();
             playerAction(playerAction, currentPlayerTurn);
+            if (BatalhaNaval.naviosJogador1 == 0 || BatalhaNaval.naviosJogador2 == 0) {
+                break;
+            }
             setCurrentPlayerTurn(currentPlayerTurn == 0 ? 1 : 0);
             System.out.println("Fim do turno");
         }
